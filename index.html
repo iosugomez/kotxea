@@ -427,97 +427,80 @@
 
         <!-- TABS -->
         <div class="tabs">
-            <button class="tab-btn active" data-tab="registro">🚗💵 Registro Completo</button>
+            <button class="tab-btn active" data-tab="registro">🚗💵 Registro</button>
             <button class="tab-btn" data-tab="configuracion">⚙️ Configuración</button>
         </div>
 
         <!-- TAB REGISTRO COMPLETO -->
         <div id="registro" class="tab-content active">
-            <!-- FORMULARIO DINERO -->
+            <!-- FORMULARIO UNIFICADO -->
             <div class="seccion">
-                <h2>Registrar Movimiento de Dinero</h2>
+                <h2>Registrar Viaje y Dinero</h2>
                 <div class="formulario">
                     <div class="grupo-form">
-                        <label for="fecha-dinero">Fecha</label>
-                        <input type="date" id="fecha-dinero">
+                        <label for="fecha-viaje">Fecha</label>
+                        <input type="date" id="fecha-viaje">
                     </div>
-
                     <div class="grupo-form">
-                        <label for="importe-dinero">Importe Total (€)</label>
-                        <input type="number" id="importe-dinero" placeholder="0.00" step="0.01" min="0">
+                        <label for="conductor-viaje">Conductor</label>
+                        <select id="conductor-viaje">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Iosu">Iosu</option>
+                            <option value="Lide">Lide</option>
+                            <option value="Asier">Asier</option>
+                            <option value="Itziar">Itziar</option>
+                        </select>
                     </div>
-
                     <div class="grupo-form">
-                        <label>¿Quién genera el dinero?</label>
-                        <div class="checkboxes">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="generador-iosu" value="Iosu" class="generador-dinero">
-                                <label for="generador-iosu">Iosu</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="generador-lide" value="Lide" class="generador-dinero">
-                                <label for="generador-lide">Lide</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="generador-asier" value="Asier" class="generador-dinero">
-                                <label for="generador-asier">Asier</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="generador-itziar" value="Itziar" class="generador-dinero">
-                                <label for="generador-itziar">Itziar</label>
-                            </div>
+                        <label>Pasajeros</label>
+                        <div class="checkboxes" id="pasajeros-checkboxes">
+                            <!-- Se rellena por JS -->
                         </div>
                     </div>
-
                     <div class="grupo-form">
-                        <label>¿Entre quiénes se reparte?</label>
-                        <div class="checkboxes">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="reparto-iosu" value="Iosu" class="reparto-dinero">
-                                <label for="reparto-iosu">Iosu</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="reparto-lide" value="Lide" class="reparto-dinero">
-                                <label for="reparto-lide">Lide</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="reparto-asier" value="Asier" class="reparto-dinero">
-                                <label for="reparto-asier">Asier</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="reparto-itziar" value="Itziar" class="reparto-dinero">
-                                <label for="reparto-itziar">Itziar</label>
-                            </div>
-                        </div>
+                        <label for="dinero-viaje">Dinero generado (€)</label>
+                        <input type="number" id="dinero-viaje" placeholder="0.00" step="0.01" min="0">
                     </div>
-
                     <div class="botones-form">
-                        <button class="btn-primario" id="btn-guardar-dinero">💾 Guardar Movimiento</button>
-                        <button class="btn-secundario" id="btn-limpiar-dinero">🔄 Limpiar Formulario</button>
+                        <button class="btn-primario" id="btn-guardar-registro">💾 Guardar</button>
+                        <button class="btn-secundario" id="btn-limpiar-registro">🔄 Limpiar</button>
                     </div>
                 </div>
-                <div id="alerta-dinero"></div>
+                <div id="alerta-registro"></div>
             </div>
-
-            <!-- RESUMEN DINERO -->
             <div class="seccion">
-                <h2>Resumen de Saldos - Dinero</h2>
-                <div class="resumen">
-                    <table class="tabla-resumen">
-                        <thead>
-                            <tr>
-                                <th>Persona</th>
-                                <th>Saldo (€)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-saldos-dinero">
-                        </tbody>
-                    </table>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h2>Resumen de Saldos - Viajes</h2>
+                        <div class="resumen">
+                            <table class="tabla-resumen">
+                                <thead>
+                                    <tr>
+                                        <th>Persona</th>
+                                        <th>Balance de Viajes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-saldos-viajes"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Resumen de Saldos - Dinero</h2>
+                        <div class="resumen">
+                            <table class="tabla-resumen">
+                                <thead>
+                                    <tr>
+                                        <th>Persona</th>
+                                        <th>Saldo (€)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-saldos-dinero"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
-                <h2>Historial de Movimientos</h2>
-                <div class="historial" id="historial-dinero">
-                </div>
+                <h2>Historial de Registros</h2>
+                <div class="historial" id="historial-registro"></div>
             </div>
         </div>
 
@@ -659,16 +642,24 @@
     <script>
         // ===== CONFIGURACIÓN INICIAL =====
         const PARTICIPANTES = ['Iosu', 'Lide', 'Asier', 'Itziar'];
-
-        // ===== UTILIDADES DE ALMACENAMIENTO =====
         const Storage = {
             getRegistros: () => JSON.parse(localStorage.getItem('registros')) || [],
             setRegistros: (data) => localStorage.setItem('registros', JSON.stringify(data)),
-
-            limpiarTodo: () => {
-                localStorage.removeItem('registros');
-            }
+            limpiarTodo: () => { localStorage.removeItem('registros'); }
         };
+
+        // ===== PASAJEROS DINÁMICOS =====
+        function actualizarCheckboxesPasajeros() {
+            const conductor = document.getElementById('conductor-viaje').value;
+            const cont = document.getElementById('pasajeros-checkboxes');
+            cont.innerHTML = '';
+            PARTICIPANTES.forEach(p => {
+                if (p !== conductor) {
+                    const id = 'pasajero-' + p.toLowerCase();
+                    cont.innerHTML += `<div class="checkbox-item"><input type="checkbox" id="${id}" value="${p}" class="pasajero-viaje"><label for="${id}">${p}</label></div>`;
+                }
+            });
+        }
 
         // ===== GESTIÓN DE TABS =====
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -689,33 +680,15 @@
                 const conductor = document.getElementById('conductor-viaje').value;
                 const pasajeros = Array.from(document.querySelectorAll('.pasajero-viaje:checked')).map(el => el.value);
                 const dinero = parseFloat(document.getElementById('dinero-viaje').value) || 0;
-
                 // Validaciones
-                if (!fecha) {
-                    SistemaRegistro.mostrarAlerta('Por favor, selecciona una fecha', 'error');
-                    return;
-                }
-                if (!conductor) {
-                    SistemaRegistro.mostrarAlerta('Por favor, selecciona un conductor', 'error');
-                    return;
-                }
-                if (pasajeros.length === 0) {
-                    SistemaRegistro.mostrarAlerta('Selecciona al menos un pasajero', 'error');
-                    return;
-                }
-
-                const registro = {
-                    id: Date.now(),
-                    fecha,
-                    conductor,
-                    pasajeros,
-                    dinero
-                };
-
+                if (!fecha) { SistemaRegistro.mostrarAlerta('Por favor, selecciona una fecha', 'error'); return; }
+                if (!conductor) { SistemaRegistro.mostrarAlerta('Por favor, selecciona un conductor', 'error'); return; }
+                if (pasajeros.length === 0) { SistemaRegistro.mostrarAlerta('Selecciona al menos un pasajero', 'error'); return; }
+                // Guardar registro
+                const registro = { id: Date.now(), fecha, conductor, pasajeros, dinero };
                 const registros = Storage.getRegistros();
                 registros.push(registro);
                 Storage.setRegistros(registros);
-
                 SistemaRegistro.mostrarAlerta('Registro guardado correctamente', 'exito');
                 SistemaRegistro.limpiarFormulario();
                 SistemaRegistro.actualizarVistas();
@@ -733,44 +706,26 @@
             calcularSaldosViajes: () => {
                 const saldos = {};
                 PARTICIPANTES.forEach(p => saldos[p] = 0);
-
                 const registros = Storage.getRegistros();
                 registros.forEach(reg => {
-                    // Total de personas en el viaje (conductor + pasajeros)
                     const totalPersonas = reg.pasajeros.length + 1;
-                    // Cada persona paga 1 / total
                     const costoPorPersona = 1 / totalPersonas;
-
-                    // El conductor gana 1 viaje menos su parte
                     saldos[reg.conductor] += (1 - costoPorPersona);
-
-                    // Cada pasajero pierde su parte
-                    reg.pasajeros.forEach(pasajero => {
-                        saldos[pasajero] -= costoPorPersona;
-                    });
+                    reg.pasajeros.forEach(pasajero => { saldos[pasajero] -= costoPorPersona; });
                 });
-
                 return saldos;
             },
-
             calcularSaldosDinero: () => {
                 const saldos = {};
                 PARTICIPANTES.forEach(p => saldos[p] = 0);
-
                 const registros = Storage.getRegistros();
                 registros.forEach(reg => {
                     if (reg.dinero > 0 && reg.pasajeros.length > 0) {
-                        // El conductor "recibe" el dinero generado
                         saldos[reg.conductor] += reg.dinero;
-
-                        // Se reparte equitativamente SOLO entre los pasajeros (no incluye al conductor)
                         const dineroPorPasajero = reg.dinero / reg.pasajeros.length;
-                        reg.pasajeros.forEach(pasajero => {
-                            saldos[pasajero] -= dineroPorPasajero;
-                        });
+                        reg.pasajeros.forEach(pasajero => { saldos[pasajero] -= dineroPorPasajero; });
                     }
                 });
-
                 return saldos;
             },
 
@@ -947,15 +902,18 @@
             // Establecer fecha actual por defecto
             const hoy = new Date().toISOString().split('T')[0];
             document.getElementById('fecha-viaje').value = hoy;
-
-            // Botones Registro Combinado
+            // Inicializar checkboxes pasajeros
+            actualizarCheckboxesPasajeros();
+            document.getElementById('conductor-viaje').addEventListener('change', actualizarCheckboxesPasajeros);
+            // Botones Registro
             document.getElementById('btn-guardar-registro').addEventListener('click', SistemaRegistro.guardar);
-            document.getElementById('btn-limpiar-registro').addEventListener('click', SistemaRegistro.limpiarFormulario);
-
+            document.getElementById('btn-limpiar-registro').addEventListener('click', () => {
+                SistemaRegistro.limpiarFormulario();
+                actualizarCheckboxesPasajeros();
+            });
             // Botones Exportar
             document.getElementById('btn-exportar-viajes').addEventListener('click', SistemaRegistro.exportarCSVViajes);
             document.getElementById('btn-exportar-dinero').addEventListener('click', SistemaRegistro.exportarCSVDinero);
-
             // Botón Reiniciar Mes
             document.getElementById('btn-reiniciar-mes').addEventListener('click', () => {
                 Modal.mostrar(
@@ -965,13 +923,13 @@
                         Storage.limpiarTodo();
                         SistemaRegistro.actualizarVistas();
                         alert('✅ Todos los datos han sido eliminados');
+                        SistemaRegistro.limpiarFormulario();
+                        actualizarCheckboxesPasajeros();
                     }
                 );
             });
-
             // Botón Cancelar Modal
             document.getElementById('btn-cancelar').addEventListener('click', Modal.cerrar);
-
             // Actualizar vistas iniciales
             SistemaRegistro.actualizarVistas();
         });
