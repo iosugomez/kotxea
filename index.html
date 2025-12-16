@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor Coche Compartido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .contenedor {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .participantes-info {
+            font-size: 14px;
+            color: #666;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .seccion {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .seccion h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .formulario {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .grupo-form {
+            display: grid;
+            gap: 8px;
+        }
+
+        label {
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="date"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        .checkboxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .botones-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primario {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primario:hover {
+            background: #5568d3;
+        }
+
+        .btn-secundario {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secundario:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-peligro {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-peligro:hover {
+            background: #c0392b;
+        }
+
+        .btn-exito {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-exito:hover {
+            background: #229954;
+        }
+
+        .resumen {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tabla-resumen {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .tabla-resumen th,
+        .tabla-resumen td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .tabla-resumen th {
+            background: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .tabla-resumen tr:hover {
+            background: #f9f9f9;
+        }
+
+        .saldo-positivo {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .saldo-negativo {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .saldo-cero {
+            color: #999;
+            font-weight: 600;
+        }
+
+        .historial {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .movimiento {
+            background: white;
+            padding: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .movimiento-info {
+            flex: 1;
+        }
+
+        .movimiento-fecha {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .movimiento-detalles {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .btn-eliminar {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-eliminar:hover {
+            background: #c0392b;
+        }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-contenido {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .modal-contenido h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-contenido p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-botones {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .alerta {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .alerta-exito {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alerta-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .checkboxes {
+                grid-template-columns: 1fr;
+            }
+
+            .botones-form {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+
+            .tabla-resumen {
+                font-size: 12px;
+            }
+
+            .tabla-resumen th,
+            .tabla-resumen td {
+                padding: 8px;
+            }
+
+            .movimiento {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <!-- HEADER -->
+        <header>
+            <h1>🚗 Gestor Coche Compartido</h1>
+            <div class="participantes-info">
+                Participantes: <strong>Iosu, Lide, Asier, Itziar</strong>
+            </div>
+        </header>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="dinero">💵 Dinero</button>
+            <button class="tab-btn" data-tab="viajes">🚙 Viajes</button>
+            <button class="tab-btn" data-tab="configuracion">⚙️ Configuración</button>
+        </div>
+
+        <!-- TAB DINERO -->
+        <div id="dinero" class="tab-content active">
+            <!-- FORMULARIO DINERO -->
+            <div class="seccion">
+                <h2>Registrar Movimiento de Dinero</h2>
+                <div class="formulario">
+                    <div class="grupo-form">
+                        <label for="fecha-dinero">Fecha</label>
+                        <input type="date" id="fecha-dinero">
+                    </div>
+
+                    <div class="grupo-form">
+                        <label for="importe-dinero">Importe Total (€)</label>
+                        <input type="number" id="importe-dinero" placeholder="0.00" step="0.01" min="0">
+                    </div>
+
+                    <div class="grupo-form">
+                        <label>¿Quién genera el dinero?</label>
+                        <div class="checkboxes">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="generador-iosu" value="Iosu" class="generador-dinero">
+                                <label for="generador-iosu">Iosu</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="generador-lide" value="Lide" class="generador-dinero">
+                                <label for="generador-lide">Lide</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="generador-asier" value="Asier" class="generador-dinero">
+                                <label for="generador-asier">Asier</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="generador-itziar" value="Itziar" class="generador-dinero">
+                                <label for="generador-itziar">Itziar</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grupo-form">
+                        <label>¿Entre quiénes se reparte?</label>
+                        <div class="checkboxes">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reparto-iosu" value="Iosu" class="reparto-dinero">
+                                <label for="reparto-iosu">Iosu</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reparto-lide" value="Lide" class="reparto-dinero">
+                                <label for="reparto-lide">Lide</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reparto-asier" value="Asier" class="reparto-dinero">
+                                <label for="reparto-asier">Asier</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reparto-itziar" value="Itziar" class="reparto-dinero">
+                                <label for="reparto-itziar">Itziar</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="botones-form">
+                        <button class="btn-primario" id="btn-guardar-dinero">💾 Guardar Movimiento</button>
+                        <button class="btn-secundario" id="btn-limpiar-dinero">🔄 Limpiar Formulario</button>
+                    </div>
+                </div>
+                <div id="alerta-dinero"></div>
+            </div>
+
+            <!-- RESUMEN DINERO -->
+            <div class="seccion">
+                <h2>Resumen de Saldos - Dinero</h2>
+                <div class="resumen">
+                    <table class="tabla-resumen">
+                        <thead>
+                            <tr>
+                                <th>Persona</th>
+                                <th>Saldo (€)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-saldos-dinero">
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Historial de Movimientos</h2>
+                <div class="historial" id="historial-dinero">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB VIAJES -->
+        <div id="viajes" class="tab-content">
+            <!-- FORMULARIO VIAJES -->
+            <div class="seccion">
+                <h2>Registrar Viaje</h2>
+                <div class="formulario">
+                    <div class="grupo-form">
+                        <label for="fecha-viaje">Fecha del Trayecto</label>
+                        <input type="date" id="fecha-viaje">
+                    </div>
+
+                    <div class="grupo-form">
+                        <label for="conductor-viaje">Conductor</label>
+                        <select id="conductor-viaje">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="Iosu">Iosu</option>
+                            <option value="Lide">Lide</option>
+                            <option value="Asier">Asier</option>
+                            <option value="Itziar">Itziar</option>
+                        </select>
+                    </div>
+
+                    <div class="grupo-form">
+                        <label>Pasajeros</label>
+                        <div class="checkboxes">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pasajero-iosu" value="Iosu" class="pasajero-viaje">
+                                <label for="pasajero-iosu">Iosu</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pasajero-lide" value="Lide" class="pasajero-viaje">
+                                <label for="pasajero-lide">Lide</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pasajero-asier" value="Asier" class="pasajero-viaje">
+                                <label for="pasajero-asier">Asier</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pasajero-itziar" value="Itziar" class="pasajero-viaje">
+                                <label for="pasajero-itziar">Itziar</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="botones-form">
+                        <button class="btn-primario" id="btn-guardar-viaje">💾 Guardar Viaje</button>
+                        <button class="btn-secundario" id="btn-limpiar-viaje">🔄 Limpiar Formulario</button>
+                    </div>
+                </div>
+                <div id="alerta-viaje"></div>
+            </div>
+
+            <!-- RESUMEN VIAJES -->
+            <div class="seccion">
+                <h2>Resumen de Saldos - Viajes</h2>
+                <div class="resumen">
+                    <table class="tabla-resumen">
+                        <thead>
+                            <tr>
+                                <th>Persona</th>
+                                <th>Balance de Viajes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-saldos-viajes">
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Historial de Viajes</h2>
+                <div class="historial" id="historial-viajes">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONFIGURACIÓN -->
+        <div id="configuracion" class="tab-content">
+            <div class="seccion">
+                <h2>Configuración y Control</h2>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 10px;">Exportar Datos</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-exito" id="btn-exportar-dinero">📊 Exportar CSV - Dinero</button>
+                        <button class="btn-exito" id="btn-exportar-viajes">📊 Exportar CSV - Viajes</button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">⚠️ Zona de Riesgo</h3>
+                    <p style="color: #856404; font-size: 14px; margin-bottom: 15px;">
+                        Esta acción borrará todos los datos del mes actual de ambos sistemas (Dinero y Viajes). No se puede deshacer.
+                    </p>
+                    <button class="btn-peligro" id="btn-reiniciar-mes">🗑️ Reiniciar Mes (Borrar Todo)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRMACIÓN -->
+    <div id="modal-confirmacion" class="modal">
+        <div class="modal-contenido">
+            <h2 id="modal-titulo">Confirmación</h2>
+            <p id="modal-mensaje"></p>
+            <div class="modal-botones">
+                <button class="btn-peligro" id="btn-confirmar">Confirmar</button>
+                <button class="btn-secundario" id="btn-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== CONFIGURACIÓN INICIAL =====
+        const PARTICIPANTES = ['Iosu', 'Lide', 'Asier', 'Itziar'];
+
+        // ===== UTILIDADES DE ALMACENAMIENTO =====
+        const Storage = {
+            getMovimientosDinero: () => JSON.parse(localStorage.getItem('movimientosDinero')) || [],
+            setMovimientosDinero: (data) => localStorage.setItem('movimientosDinero', JSON.stringify(data)),
+
+            getViajes: () => JSON.parse(localStorage.getItem('viajes')) || [],
+            setViajes: (data) => localStorage.setItem('viajes', JSON.stringify(data)),
+
+            limpiarTodo: () => {
+                localStorage.removeItem('movimientosDinero');
+                localStorage.removeItem('viajes');
+            }
+        };
+
+        // ===== GESTIÓN DE TABS =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                
+                e.target.classList.add('active');
+                const tabId = e.target.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // ===== SISTEMA DE DINERO =====
+        const SistemaDinero = {
+            guardar: () => {
+                const fecha = document.getElementById('fecha-dinero').value;
+                const importe = parseFloat(document.getElementById('importe-dinero').value);
+                const generadores = Array.from(document.querySelectorAll('.generador-dinero:checked')).map(el => el.value);
+                const repartos = Array.from(document.querySelectorAll('.reparto-dinero:checked')).map(el => el.value);
+
+                // Validaciones
+                if (!fecha) {
+                    SistemaDinero.mostrarAlerta('Por favor, selecciona una fecha', 'error');
+                    return;
+                }
+                if (isNaN(importe) || importe <= 0) {
+                    SistemaDinero.mostrarAlerta('Por favor, ingresa un importe válido', 'error');
+                    return;
+                }
+                if (generadores.length === 0) {
+                    SistemaDinero.mostrarAlerta('Selecciona al menos un generador de dinero', 'error');
+                    return;
+                }
+                if (repartos.length === 0) {
+                    SistemaDinero.mostrarAlerta('Selecciona al menos una persona para el reparto', 'error');
+                    return;
+                }
+
+                // Calcular reparto
+                const imporePorPersona = importe / repartos.length;
+
+                const movimiento = {
+                    id: Date.now(),
+                    fecha,
+                    importe,
+                    generadores,
+                    repartos,
+                    imporePorPersona
+                };
+
+                const movimientos = Storage.getMovimientosDinero();
+                movimientos.push(movimiento);
+                Storage.setMovimientosDinero(movimientos);
+
+                SistemaDinero.mostrarAlerta('Movimiento guardado correctamente', 'exito');
+                SistemaDinero.limpiarFormulario();
+                SistemaDinero.actualizarVistas();
+            },
+
+            eliminar: (id) => {
+                const movimientos = Storage.getMovimientosDinero();
+                const filtrados = movimientos.filter(m => m.id !== id);
+                Storage.setMovimientosDinero(filtrados);
+                SistemaDinero.actualizarVistas();
+            },
+
+            calcularSaldos: () => {
+                const saldos = {};
+                PARTICIPANTES.forEach(p => saldos[p] = 0);
+
+                const movimientos = Storage.getMovimientosDinero();
+                movimientos.forEach(mov => {
+                    // Cada generador "recibe" dinero (positivo)
+                    const dineroGenerador = mov.importe / mov.generadores.length;
+                    mov.generadores.forEach(gen => {
+                        saldos[gen] += dineroGenerador;
+                    });
+
+                    // Cada persona en el reparto "paga" (negativo)
+                    mov.repartos.forEach(rep => {
+                        saldos[rep] -= mov.imporePorPersona;
+                    });
+                });
+
+                return saldos;
+            },
+
+            actualizarVistas: () => {
+                SistemaDinero.actualizarTablaSaldos();
+                SistemaDinero.actualizarHistorial();
+            },
+
+            actualizarTablaSaldos: () => {
+                const saldos = SistemaDinero.calcularSaldos();
+                const tabla = document.getElementById('tabla-saldos-dinero');
+                tabla.innerHTML = '';
+
+                PARTICIPANTES.forEach(persona => {
+                    const saldo = saldos[persona];
+                    const claseBalance = saldo > 0 ? 'saldo-positivo' : (saldo < 0 ? 'saldo-negativo' : 'saldo-cero');
+                    
+                    const fila = `
+                        <tr>
+                            <td>${persona}</td>
+                            <td class="${claseBalance}">${saldo > 0 ? '+' : ''}${saldo.toFixed(2)} €</td>
+                        </tr>
+                    `;
+                    tabla.innerHTML += fila;
+                });
+            },
+
+            actualizarHistorial: () => {
+                const movimientos = Storage.getMovimientosDinero();
+                const historial = document.getElementById('historial-dinero');
+                
+                if (movimientos.length === 0) {
+                    historial.innerHTML = '<p style="color: #999; text-align: center;">No hay movimientos registrados</p>';
+                    return;
+                }
+
+                historial.innerHTML = movimientos.reverse().map(mov => `
+                    <div class="movimiento">
+                        <div class="movimiento-info">
+                            <div class="movimiento-detalles">
+                                <strong>${mov.importe.toFixed(2)} €</strong> - Generadores: ${mov.generadores.join(', ')}
+                            </div>
+                            <div class="movimiento-detalles">
+                                Reparto: ${mov.repartos.join(', ')} (${mov.imporePorPersona.toFixed(2)} € c/u)
+                            </div>
+                            <div class="movimiento-fecha">${new Date(mov.fecha).toLocaleDateString('es-ES')}</div>
+                        </div>
+                        <button class="btn-eliminar" onclick="SistemaDinero.eliminar(${mov.id})">Eliminar</button>
+                    </div>
+                `).join('');
+            },
+
+            limpiarFormulario: () => {
+                const hoy = new Date().toISOString().split('T')[0];
+                document.getElementById('fecha-dinero').value = hoy;
+                document.getElementById('importe-dinero').value = '';
+                document.querySelectorAll('.generador-dinero, .reparto-dinero').forEach(el => el.checked = false);
+            },
+
+            mostrarAlerta: (mensaje, tipo) => {
+                const alertaDiv = document.getElementById('alerta-dinero');
+                const claseAlerta = tipo === 'exito' ? 'alerta-exito' : 'alerta-error';
+                alertaDiv.innerHTML = `<div class="alerta ${claseAlerta}">${mensaje}</div>`;
+                setTimeout(() => {
+                    alertaDiv.innerHTML = '';
+                }, 3000);
+            },
+
+            exportarCSV: () => {
+                const saldos = SistemaDinero.calcularSaldos();
+                const movimientos = Storage.getMovimientosDinero();
+
+                let csv = 'RESUMEN DE SALDOS\n';
+                csv += 'Persona,Saldo (€)\n';
+                Object.entries(saldos).forEach(([persona, saldo]) => {
+                    csv += `${persona},${saldo.toFixed(2)}\n`;
+                });
+
+                csv += '\n\nHISTORIAL DE MOVIMIENTOS\n';
+                csv += 'Fecha,Importe,Generadores,Repartos,Importe por Persona\n';
+                movimientos.forEach(mov => {
+                    csv += `${mov.fecha},"${mov.importe.toFixed(2)}","${mov.generadores.join('|')}","${mov.repartos.join('|')}","${mov.imporePorPersona.toFixed(2)}"\n`;
+                });
+
+                SistemaDinero.descargarCSV(csv, 'dinero');
+            },
+
+            descargarCSV: (csv, nombre) => {
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${nombre}_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+            }
+        };
+
+        // ===== SISTEMA DE VIAJES =====
+        const SistemaViajes = {
+            guardar: () => {
+                const fecha = document.getElementById('fecha-viaje').value;
+                const conductor = document.getElementById('conductor-viaje').value;
+                const pasajeros = Array.from(document.querySelectorAll('.pasajero-viaje:checked')).map(el => el.value);
+
+                // Validaciones
+                if (!fecha) {
+                    SistemaViajes.mostrarAlerta('Por favor, selecciona una fecha', 'error');
+                    return;
+                }
+                if (!conductor) {
+                    SistemaViajes.mostrarAlerta('Por favor, selecciona un conductor', 'error');
+                    return;
+                }
+                if (pasajeros.length === 0) {
+                    SistemaViajes.mostrarAlerta('Selecciona al menos un pasajero', 'error');
+                    return;
+                }
+
+                const viaje = {
+                    id: Date.now(),
+                    fecha,
+                    conductor,
+                    pasajeros,
+                    numPasajeros: pasajeros.length
+                };
+
+                const viajes = Storage.getViajes();
+                viajes.push(viaje);
+                Storage.setViajes(viajes);
+
+                SistemaViajes.mostrarAlerta('Viaje guardado correctamente', 'exito');
+                SistemaViajes.limpiarFormulario();
+                SistemaViajes.actualizarVistas();
+            },
+
+            eliminar: (id) => {
+                const viajes = Storage.getViajes();
+                const filtrados = viajes.filter(v => v.id !== id);
+                Storage.setViajes(filtrados);
+                SistemaViajes.actualizarVistas();
+            },
+
+            calcularSaldos: () => {
+                const saldos = {};
+                PARTICIPANTES.forEach(p => saldos[p] = 0);
+
+                const viajes = Storage.getViajes();
+                viajes.forEach(viaje => {
+                    // Conductor pierde N viajes (N = número de pasajeros)
+                    saldos[viaje.conductor] -= viaje.numPasajeros;
+
+                    // Cada pasajero gana 1 viaje
+                    viaje.pasajeros.forEach(pasajero => {
+                        saldos[pasajero] += 1;
+                    });
+                });
+
+                return saldos;
+            },
+
+            actualizarVistas: () => {
+                SistemaViajes.actualizarTablaSaldos();
+                SistemaViajes.actualizarHistorial();
+            },
+
+            actualizarTablaSaldos: () => {
+                const saldos = SistemaViajes.calcularSaldos();
+                const tabla = document.getElementById('tabla-saldos-viajes');
+                tabla.innerHTML = '';
+
+                // Ordenar de más negativo a más positivo
+                const ordenados = Object.entries(saldos).sort((a, b) => a[1] - b[1]);
+
+                ordenados.forEach(([persona, saldo]) => {
+                    const claseBalance = saldo > 0 ? 'saldo-positivo' : (saldo < 0 ? 'saldo-negativo' : 'saldo-cero');
+                    
+                    const fila = `
+                        <tr>
+                            <td>${persona}</td>
+                            <td class="${claseBalance}">${saldo > 0 ? '+' : ''}${saldo} viajes</td>
+                        </tr>
+                    `;
+                    tabla.innerHTML += fila;
+                });
+            },
+
+            actualizarHistorial: () => {
+                const viajes = Storage.getViajes();
+                const historial = document.getElementById('historial-viajes');
+                
+                if (viajes.length === 0) {
+                    historial.innerHTML = '<p style="color: #999; text-align: center;">No hay viajes registrados</p>';
+                    return;
+                }
+
+                historial.innerHTML = viajes.reverse().map(viaje => `
+                    <div class="movimiento">
+                        <div class="movimiento-info">
+                            <div class="movimiento-detalles">
+                                <strong>Conductor:</strong> ${viaje.conductor}
+                            </div>
+                            <div class="movimiento-detalles">
+                                <strong>Pasajeros:</strong> ${viaje.pasajeros.join(', ')}
+                            </div>
+                            <div class="movimiento-fecha">${new Date(viaje.fecha).toLocaleDateString('es-ES')}</div>
+                        </div>
+                        <button class="btn-eliminar" onclick="SistemaViajes.eliminar(${viaje.id})">Eliminar</button>
+                    </div>
+                `).join('');
+            },
+
+            limpiarFormulario: () => {
+                const hoy = new Date().toISOString().split('T')[0];
+                document.getElementById('fecha-viaje').value = hoy;
+                document.getElementById('conductor-viaje').value = '';
+                document.querySelectorAll('.pasajero-viaje').forEach(el => el.checked = false);
+            },
+
+            mostrarAlerta: (mensaje, tipo) => {
+                const alertaDiv = document.getElementById('alerta-viaje');
+                const claseAlerta = tipo === 'exito' ? 'alerta-exito' : 'alerta-error';
+                alertaDiv.innerHTML = `<div class="alerta ${claseAlerta}">${mensaje}</div>`;
+                setTimeout(() => {
+                    alertaDiv.innerHTML = '';
+                }, 3000);
+            },
+
+            exportarCSV: () => {
+                const saldos = SistemaViajes.calcularSaldos();
+                const viajes = Storage.getViajes();
+
+                let csv = 'RESUMEN DE SALDOS\n';
+                csv += 'Persona,Balance de Viajes\n';
+                
+                const ordenados = Object.entries(saldos).sort((a, b) => a[1] - b[1]);
+                ordenados.forEach(([persona, saldo]) => {
+                    csv += `${persona},${saldo}\n`;
+                });
+
+                csv += '\n\nHISTORIAL DE VIAJES\n';
+                csv += 'Fecha,Conductor,Pasajeros,Número de Pasajeros\n';
+                viajes.forEach(viaje => {
+                    csv += `${viaje.fecha},${viaje.conductor},"${viaje.pasajeros.join('|')}",${viaje.numPasajeros}\n`;
+                });
+
+                SistemaViajes.descargarCSV(csv, 'viajes');
+            },
+
+            descargarCSV: (csv, nombre) => {
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `${nombre}_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+            }
+        };
+
+        // ===== GESTIÓN DE MODAL =====
+        const Modal = {
+            mostrar: (titulo, mensaje, callback) => {
+                document.getElementById('modal-titulo').textContent = titulo;
+                document.getElementById('modal-mensaje').textContent = mensaje;
+                document.getElementById('modal-confirmacion').classList.add('active');
+                
+                document.getElementById('btn-confirmar').onclick = () => {
+                    callback();
+                    Modal.cerrar();
+                };
+            },
+
+            cerrar: () => {
+                document.getElementById('modal-confirmacion').classList.remove('active');
+            }
+        };
+
+        // ===== EVENT LISTENERS =====
+        document.addEventListener('DOMContentLoaded', () => {
+            // Establecer fecha actual por defecto
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha-dinero').value = hoy;
+            document.getElementById('fecha-viaje').value = hoy;
+
+            // Botones Dinero
+            document.getElementById('btn-guardar-dinero').addEventListener('click', SistemaDinero.guardar);
+            document.getElementById('btn-limpiar-dinero').addEventListener('click', SistemaDinero.limpiarFormulario);
+
+            // Botones Viajes
+            document.getElementById('btn-guardar-viaje').addEventListener('click', SistemaViajes.guardar);
+            document.getElementById('btn-limpiar-viaje').addEventListener('click', SistemaViajes.limpiarFormulario);
+
+            // Botones Exportar
+            document.getElementById('btn-exportar-dinero').addEventListener('click', SistemaDinero.exportarCSV);
+            document.getElementById('btn-exportar-viajes').addEventListener('click', SistemaViajes.exportarCSV);
+
+            // Botón Reiniciar Mes
+            document.getElementById('btn-reiniciar-mes').addEventListener('click', () => {
+                Modal.mostrar(
+                    '⚠️ Reiniciar Mes',
+                    '¿Estás seguro de que quieres borrar todos los datos? Esta acción no se puede deshacer.',
+                    () => {
+                        Storage.limpiarTodo();
+                        SistemaDinero.actualizarVistas();
+                        SistemaViajes.actualizarVistas();
+                        alert('✅ Todos los datos han sido eliminados');
+                    }
+                );
+            });
+
+            // Botón Cancelar Modal
+            document.getElementById('btn-cancelar').addEventListener('click', Modal.cerrar);
+
+            // Actualizar vistas iniciales
+            SistemaDinero.actualizarVistas();
+            SistemaViajes.actualizarVistas();
+        });
+    </script>
+</body>
+</html>
