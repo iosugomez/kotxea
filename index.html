@@ -408,6 +408,10 @@
                 gap: 10px;
                 align-items: flex-start;
             }
+
+            .seccion > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
@@ -576,32 +580,38 @@
 
             <!-- RESUMEN VIAJES Y DINERO -->
             <div class="seccion">
-                <h2>Resumen de Saldos - Viajes</h2>
-                <div class="resumen">
-                    <table class="tabla-resumen">
-                        <thead>
-                            <tr>
-                                <th>Persona</th>
-                                <th>Balance de Viajes</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-saldos-viajes">
-                        </tbody>
-                    </table>
-                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <h2>Resumen de Saldos - Viajes</h2>
+                        <div class="resumen">
+                            <table class="tabla-resumen">
+                                <thead>
+                                    <tr>
+                                        <th>Persona</th>
+                                        <th>Balance de Viajes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-saldos-viajes">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                <h2>Resumen de Saldos - Dinero</h2>
-                <div class="resumen">
-                    <table class="tabla-resumen">
-                        <thead>
-                            <tr>
-                                <th>Persona</th>
-                                <th>Saldo (€)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-saldos-dinero">
-                        </tbody>
-                    </table>
+                    <div>
+                        <h2>Resumen de Saldos - Dinero</h2>
+                        <div class="resumen">
+                            <table class="tabla-resumen">
+                                <thead>
+                                    <tr>
+                                        <th>Persona</th>
+                                        <th>Saldo (€)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-saldos-dinero">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <h2>Historial de Registros</h2>
@@ -749,11 +759,11 @@
 
                 const registros = Storage.getRegistros();
                 registros.forEach(reg => {
-                    if (reg.dinero > 0) {
+                    if (reg.dinero > 0 && reg.pasajeros.length > 0) {
                         // El conductor "recibe" el dinero generado
                         saldos[reg.conductor] += reg.dinero;
 
-                        // Se reparte equitativamente entre los pasajeros
+                        // Se reparte equitativamente SOLO entre los pasajeros (no incluye al conductor)
                         const dineroPorPasajero = reg.dinero / reg.pasajeros.length;
                         reg.pasajeros.forEach(pasajero => {
                             saldos[pasajero] -= dineroPorPasajero;
